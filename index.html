@@ -492,6 +492,7 @@
     <h2 class="section-title" id="products">Our Products</h2>
 
     <div class="products">
+        
         <div class="product-card" data-name="Classic Hoodie" data-price="35">
             <img src="https://i.imgur.com/Hg4zrGx.jpeg">
             <div class="product-info">
@@ -509,7 +510,16 @@
             </div>
             <button class="add-to-cart-btn">Add to Cart</button>
         </div>
-
+        
+        <div class="product-card" data-name="Exclusive New Jacket" data-price="150">
+            <img src="https://i.imgur.com/VYdPfkT.jpeg"> 
+            <div class="product-info">
+                <h3>Exclusive New Jacket</h3>
+                <span class="price">EGP 150</span>
+            </div>
+            <button class="add-to-cart-btn">Add to Cart</button>
+        </div>
+        
         <div class="product-card" data-name="Men Jacket" data-price="50">
             <img src="https://i.imgur.com/VYdPfkT.jpeg">
             <div class="product-info">
@@ -527,7 +537,34 @@
             </div>
             <button class="add-to-cart-btn">Add to Cart</button>
         </div>
-    </div>
+        
+        </div>
+
+    <section id="features">
+        <h2 class="section-title">Why Choose Us?</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <i class="fas fa-shipping-fast"></i>
+                <h3>Fast Delivery</h3>
+                <p>Delivery within 24-48 hours across Egypt.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-shirt"></i>
+                <h3>Premium Quality</h3>
+                <p>Only the finest materials used for ultimate comfort.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-hand-holding-dollar"></i>
+                <h3>Best Prices</h3>
+                <p>High fashion without the high cost.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-exchange"></i>
+                <h3>Easy Returns</h3>
+                <p>Hassle-free exchange and return policy.</p>
+            </div>
+        </div>
+    </section>
 
     <section id="add-product">
         <h2>Add New Product</h2>
@@ -624,7 +661,7 @@
         }
 
 
-        // ---------------- OWNER ACCESS LOGIC (جديد) ----------------
+        // ---------------- OWNER ACCESS LOGIC ----------------
 
         function openOwnerModal() {
             document.getElementById('ownerModal').style.display = 'block';
@@ -636,10 +673,9 @@
             document.getElementById('ownerModal').style.display = 'none';
         }
         
-        // التحقق من كلمة المرور عند الضغط على Enter
         function checkPasswordOnEnter(event) {
             if (event.key === 'Enter') {
-                event.preventDefault(); // منع الإرسال الافتراضي إذا كان داخل فورم
+                event.preventDefault();
                 checkPassword();
             }
         }
@@ -649,22 +685,16 @@
             const errorElement = document.getElementById('passwordError');
             
             if (enteredPassword === OWNER_PASSWORD) {
-                // كلمة المرور صحيحة
                 closeOwnerModal();
-                // إظهار قسم إضافة المنتجات المخفي
                 document.getElementById('product-content').style.display = 'block';
-                // التمرير إلى قسم إضافة المنتجات
                 scrollToSection('add-product');
-                // حفظ حالة تسجيل الدخول (اختياري، حتى لا يطلبها مرة أخرى في نفس الجلسة)
                 localStorage.setItem('ownerAccess', 'true'); 
 
             } else {
-                // كلمة المرور خاطئة
                 errorElement.style.display = 'block';
             }
         }
         
-        // عند تحميل الصفحة، تحقق مما إذا كان المستخدم قد قام بتسجيل الدخول مسبقًا في هذه الجلسة
         window.onload = function() {
             if (localStorage.getItem('ownerAccess') === 'true') {
                  document.getElementById('product-content').style.display = 'block';
