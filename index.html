@@ -244,32 +244,30 @@
             margin-bottom: 10px;
         }
 
-        /* ---------------- ADD PRODUCT ---------------- */
+        /* ---------------- ADD PRODUCT (New Lockout Styles) ---------------- */
         #add-product {
             padding: 50px;
             background: #f6f6f6;
             margin-top: 50px;
-        }
-
-        #add-product h2 {
             text-align: center;
-            font-size: 32px;
-            margin-bottom: 20px;
         }
-
-        #productForm {
+        
+        /* إخفاء قسم الإضافة افتراضياً */
+        #product-content {
             max-width: 500px;
-            margin: auto;
+            margin: 20px auto;
             background: white;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, .1);
+            display: none; /* الأهم: إخفاء المحتوى */
         }
 
         #productForm label {
             display: block;
             margin-bottom: 5px;
             font-weight: 500;
+            text-align: left;
         }
 
         #productForm input {
@@ -278,6 +276,19 @@
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
+        }
+
+        /* Owner Login Modal */
+        #ownerModal .modal-content {
+            text-align: center;
+        }
+        #ownerModal input {
+            padding: 10px;
+            margin: 10px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 80%;
+            max-width: 300px;
         }
 
         /* ---------------- DELIVERY ---------------- */
@@ -456,7 +467,7 @@
             <ul class="main-menu">
                 <li onclick="scrollToSection('hero')">Home</li>
                 <li onclick="scrollToSection('products')">Products</li>
-                <li onclick="scrollToSection('add-product')">Add Product</li>
+                <li onclick="openOwnerModal()">Add Product</li>
                 <li onclick="scrollToSection('delivery')">Delivery</li>
                 <li onclick="scrollToSection('contact')">Contact</li>
             </ul>
@@ -516,50 +527,27 @@
             </div>
             <button class="add-to-cart-btn">Add to Cart</button>
         </div>
-        </div>
-
-    <section id="features">
-        <h2 class="section-title">Why Choose Us?</h2>
-        <div class="features-grid">
-            <div class="feature-item">
-                <i class="fas fa-shipping-fast"></i>
-                <h3>Fast Delivery</h3>
-                <p>Delivery within 24-48 hours across Egypt.</p>
-            </div>
-            <div class="feature-item">
-                <i class="fas fa-shirt"></i>
-                <h3>Premium Quality</h3>
-                <p>Only the finest materials used for ultimate comfort.</p>
-            </div>
-            <div class="feature-item">
-                <i class="fas fa-hand-holding-dollar"></i>
-                <h3>Best Prices</h3>
-                <p>High fashion without the high cost.</p>
-            </div>
-            <div class="feature-item">
-                <i class="fas fa-exchange"></i>
-                <h3>Easy Returns</h3>
-                <p>Hassle-free exchange and return policy.</p>
-            </div>
-        </div>
-    </section>
+    </div>
 
     <section id="add-product">
         <h2>Add New Product</h2>
-        <form id="productForm">
-            <label for="productName">Product Name:</label>
-            <input type="text" id="productName" required>
+        
+        <div id="product-content">
+            <form id="productForm">
+                <label for="productName">Product Name:</label>
+                <input type="text" id="productName" required>
 
-            <label for="productPrice">Price (EGP):</label>
-            <input type="number" id="productPrice" min="1" required>
+                <label for="productPrice">Price (EGP):</label>
+                <input type="number" id="productPrice" min="1" required>
 
-            <label for="productImage">Upload Image:</label>
-            <input type="file" id="productImage" accept="image/*" required>
+                <label for="productImage">Upload Image:</label>
+                <input type="file" id="productImage" accept="image/*" required>
 
-            <button type="submit" class="btn">
-                Add Product
-            </button>
-        </form>
+                <button type="submit" class="btn">
+                    Add Product
+                </button>
+            </form>
+        </div>
     </section>
 
     <section id="delivery">
@@ -605,8 +593,22 @@
         </div>
     </div>
 
+    <div id="ownerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeOwnerModal()">&times;</span>
+            <h2>Owner Access</h2>
+            <p>Please enter the owner password to add products.</p>
+            <input type="password" id="ownerPassword" placeholder="Enter Password" onkeypress="checkPasswordOnEnter(event)">
+            <button class="btn" onclick="checkPassword()">Submit</button>
+            <p id="passwordError" style="color: red; margin-top: 10px; display: none;">Incorrect Password!</p>
+        </div>
+    </div>
+
 
     <script>
+        // كلمة المرور الخاصة بك (يمكنك تغييرها هنا)
+        const OWNER_PASSWORD = "shady2025"; 
+
         // Initialize an empty array for the shopping cart
         let cart = [];
 
@@ -622,6 +624,54 @@
         }
 
 
+        // ---------------- OWNER ACCESS LOGIC (جديد) ----------------
+
+        function openOwnerModal() {
+            document.getElementById('ownerModal').style.display = 'block';
+            document.getElementById('ownerPassword').value = '';
+            document.getElementById('passwordError').style.display = 'none';
+        }
+
+        function closeOwnerModal() {
+            document.getElementById('ownerModal').style.display = 'none';
+        }
+        
+        // التحقق من كلمة المرور عند الضغط على Enter
+        function checkPasswordOnEnter(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // منع الإرسال الافتراضي إذا كان داخل فورم
+                checkPassword();
+            }
+        }
+
+        function checkPassword() {
+            const enteredPassword = document.getElementById('ownerPassword').value;
+            const errorElement = document.getElementById('passwordError');
+            
+            if (enteredPassword === OWNER_PASSWORD) {
+                // كلمة المرور صحيحة
+                closeOwnerModal();
+                // إظهار قسم إضافة المنتجات المخفي
+                document.getElementById('product-content').style.display = 'block';
+                // التمرير إلى قسم إضافة المنتجات
+                scrollToSection('add-product');
+                // حفظ حالة تسجيل الدخول (اختياري، حتى لا يطلبها مرة أخرى في نفس الجلسة)
+                localStorage.setItem('ownerAccess', 'true'); 
+
+            } else {
+                // كلمة المرور خاطئة
+                errorElement.style.display = 'block';
+            }
+        }
+        
+        // عند تحميل الصفحة، تحقق مما إذا كان المستخدم قد قام بتسجيل الدخول مسبقًا في هذه الجلسة
+        window.onload = function() {
+            if (localStorage.getItem('ownerAccess') === 'true') {
+                 document.getElementById('product-content').style.display = 'block';
+            }
+        }
+
+
         // ---------------- SHOPPING CART LOGIC ----------------
 
         function updateCartDisplay() {
@@ -630,7 +680,7 @@
             const cartTotal = document.getElementById('cart-total');
             let total = 0;
 
-            cartList.innerHTML = ''; // Clear existing list
+            cartList.innerHTML = ''; 
 
             if (cart.length === 0) {
                 cartList.innerHTML = '<li style="justify-content: center; color: #777;">Your cart is empty.</li>';
@@ -638,7 +688,6 @@
 
             cart.forEach(item => {
                 const li = document.createElement('li');
-                // تم تحديث العملة هنا في عرض المنتجات
                 li.innerHTML = `
                     <span>${item.name} (x${item.quantity})</span>
                     <span>EGP ${(item.price * item.quantity).toFixed(2)}</span>
@@ -648,7 +697,6 @@
             });
 
             cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
-            // تم تحديث العملة هنا في الإجمالي
             cartTotal.textContent = `Total: EGP ${total.toFixed(2)}`;
         }
 
@@ -668,11 +716,9 @@
             }
 
             updateCartDisplay();
-            // بعد الإضافة، افتح سلة التسوق مباشرة
             openCartModal();
         }
 
-        // Event listener for all "Add to Cart" buttons
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('add-to-cart-btn')) {
                 const card = e.target.closest('.product-card');
@@ -686,7 +732,7 @@
         // ---------------- CART MODAL LOGIC ----------------
 
         function openCartModal() {
-            updateCartDisplay(); // Refresh cart content before opening
+            updateCartDisplay();
             document.getElementById('shoppingCartModal').style.display = 'block';
         }
 
@@ -694,15 +740,18 @@
             document.getElementById('shoppingCartModal').style.display = 'none';
         }
 
-        // Close the modal if user clicks outside of it
         window.onclick = function(event) {
-            const modal = document.getElementById('shoppingCartModal');
-            if (event.target == modal) {
-                modal.style.display = "none";
+            const cartModal = document.getElementById('shoppingCartModal');
+            const ownerModal = document.getElementById('ownerModal');
+            
+            if (event.target == cartModal) {
+                cartModal.style.display = "none";
+            }
+             if (event.target == ownerModal) {
+                ownerModal.style.display = "none";
             }
         }
 
-        // Checkout Function
         function checkout() {
             if (cart.length === 0) {
                 alert("سلة المشتريات فارغة. الرجاء إضافة منتجات لإتمام الطلب.");
@@ -711,7 +760,6 @@
 
             alert(`تم تأكيد طلبك بنجاح! سيتم الدفع نقداً عند الاستلام.`);
 
-            // Reset cart after successful checkout
             cart = [];
             updateCartDisplay();
             closeCartModal();
@@ -736,7 +784,6 @@
             reader.onload = function () {
                 let imgURL = reader.result;
 
-                // تم تحديث العملة هنا في إضافة المنتج الجديد
                 let productCard = `
                     <div class="product-card" data-name="${name}" data-price="${price}">
                         <img src="${imgURL}">
@@ -753,7 +800,6 @@
 
             reader.readAsDataURL(imageFile);
 
-            // Clear form
             document.getElementById("productForm").reset();
             alert(`Product '${name}' has been added successfully!`);
             scrollToSection('products');
