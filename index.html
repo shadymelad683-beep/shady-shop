@@ -1,115 +1,580 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shady Pro Shop</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-<style>
-body{margin:0;font-family:sans-serif;background:#f5f5f5}
-nav{background:#111;color:#fff;padding:15px;display:flex;justify-content:space-between}
-nav h2{color:#ffcc00}
-
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;padding:20px}
-.card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.1)}
-.card img{width:100%;height:220px;object-fit:cover}
-.card h3,.card p{margin:10px}
-.btn{background:#111;color:#fff;border:none;padding:10px;margin:10px;cursor:pointer;width:90%}
-.btn:hover{background:#ffcc00;color:#000}
-
-.cart{position:fixed;bottom:20px;right:20px;background:#ffcc00;padding:15px;border-radius:50%;cursor:pointer}
-.whatsapp{position:fixed;bottom:20px;left:20px;background:#25D366;color:#fff;padding:15px;border-radius:50%}
-
-#admin{display:none;padding:20px;background:#fff;margin:20px;border-radius:10px}
-
-input{padding:10px;margin:5px;width:90%}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شورت سبورت - أفضل الشورتات الرياضية</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-running"></i>
+                    <span>شورت سبورت</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">الرئيسية</a></li>
+                    <li><a href="#products">المنتجات</a></li>
+                    <li><a href="#about">عن المتجر</a></li>
+                    <li><a href="#contact">تواصل معنا</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <i class="fas fa-search search-btn" id="searchBtn"></i>
+                    <div class="cart-icon" id="cartIcon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
 
-<nav>
-<h2>Shady Shop 🔥</h2>
-<div onclick="login()">Admin</div>
-</nav>
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-box">
+            <input type="text" placeholder="ابحث عن شورتات رياضية..." id="searchInput">
+            <i class="fas fa-times close-search" id="closeSearch"></i>
+        </div>
+    </div>
 
-<div id="admin">
-<h3>Add Product</h3>
-<input id="name" placeholder="Name">
-<input id="price" placeholder="Price">
-<input id="img" placeholder="Image URL">
-<button class="btn" onclick="addProduct()">Add</button>
-</div>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>أفضل الشورتات الرياضية</h1>
+            <p>جودة عالية وتصميم عصري لكل رياضي</p>
+            <button class="cta-btn" onclick="scrollToProducts()">تسوق الآن</button>
+        </div>
+        <div class="hero-slider">
+            <div class="slide active">
+                <img src="https://images.unsplash.com/photo-1552674608-46dfe887acf7?w=800" alt="شورت رياضي">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1574179208501-181df02b0e38?w=800" alt="شورت تدريب">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800" alt="شورت كرة قدم">
+            </div>
+        </div>
+    </section>
 
-<div class="products" id="products"></div>
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="container">
+            <h2 class="section-title">منتجاتنا</h2>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">الكل</button>
+                <button class="filter-btn" data-filter="running">جري</button>
+                <button class="filter-btn" data-filter="gym">جيم</button>
+                <button class="filter-btn" data-filter="football">كرة قدم</button>
+                <button class="filter-btn" data-filter="price-low">السعر: منخفض</button>
+                <button class="filter-btn" data-filter="price-high">السعر: مرتفع</button>
+            </div>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
 
-<div class="cart" onclick="checkout()">🛒 <span id="count">0</span></div>
+    <!-- Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" id="closeModal"></i>
+            <div class="product-details">
+                <div class="product-images">
+                    <img src="" alt="" class="main-image" id="modalMainImage">
+                    <div class="thumbnails" id="modalThumbnails"></div>
+                </div>
+                <div class="product-info">
+                    <h3 id="modalTitle"></h3>
+                    <div class="price" id="modalPrice"></div>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span id="modalRating">(4.8)</span>
+                    </div>
+                    <p id="modalDescription"></p>
+                    <div class="sizes">
+                        <label>المقاس:</label>
+                        <select id="sizeSelect">
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+                    <div class="quantity">
+                        <label>الكمية:</label>
+                        <input type="number" value="1" min="1" id="quantityInput">
+                    </div>
+                    <div class="add-to-cart">
+                        <button class="add-cart-btn" id="addToCartBtn">أضف للسلة</button>
+                        <button class="buy-now-btn">اشترِ الآن</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<a class="whatsapp" id="whatsapp" target="_blank">
-<i class="fab fa-whatsapp"></i>
-</a>
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h3>سلة التسوق</h3>
+            <i class="fas fa-times close-cart" id="closeCart"></i>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-total">
+            <span>المجموع:</span>
+            <span id="cartTotal">0 ر.س</span>
+        </div>
+        <button class="checkout-btn">الدفع الآن</button>
+    </div>
 
-<script>
-let products=JSON.parse(localStorage.getItem("products"))||[
-{name:"Hoodie",price:150,img:"https://i.imgur.com/Hg4zrGx.jpeg"},
-{name:"T-Shirt",price:80,img:"https://i.imgur.com/Gw5uYKE.jpeg"}
-];
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>شورت سبورت</h3>
+                    <p>متجرك المفضل للشورتات الرياضية بأفضل الأسعار</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="#home">الرئيسية</a></li>
+                        <li><a href="#products">المنتجات</a></li>
+                        <li><a href="#about">عن المتجر</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>خدمة العملاء</h4>
+                    <ul>
+                        <li><a href="#">سياسة الإرجاع</a></li>
+                        <li><a href="#">الشحن</a></li>
+                        <li><a href="#">الأسئلة الشائعة</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>تواصل معنا</h4>
+                    <p><i class="fas fa-phone"></i> 966500000000+</p>
+                    <p><i class="fas fa-envelope"></i> info@shortsport.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 شورت سبورت. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
 
-let cart=[];
-
-function render(){
-let html="";
-products.forEach((p,i)=>{
-html+=`
-<div class="card">
-<img src="${p.img}">
-<h3>${p.name}</h3>
-<p>${p.price} EGP</p>
-<button class="btn" onclick="add(${i})">Add to Cart</button>
-</div>`;
-});
-document.getElementById("products").innerHTML=html;
-}
-
-function add(i){
-cart.push(products[i]);
-document.getElementById("count").innerText=cart.length;
-}
-
-function checkout(){
-if(cart.length==0){alert("Cart empty");return;}
-let msg="Order:%0A";
-cart.forEach(p=>{
-msg+=`${p.name} - ${p.price} EGP%0A`;
-});
-window.open(`https://wa.me/20123456789?text=${msg}`);
-}
-
-function login(){
-let pass=prompt("Enter password");
-if(pass==="1234"){
-document.getElementById("admin").style.display="block";
-}else{
-alert("Wrong password");
-}
-}
-
-function addProduct(){
-let name=document.getElementById("name").value;
-let price=document.getElementById("price").value;
-let img=document.getElementById("img").value;
-
-products.push({name,price,img});
-localStorage.setItem("products",JSON.stringify(products));
-render();
-alert("Added ✅");
-}
-
-render();
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
-/////
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+}
+
+.navbar {
+    padding: 1rem 0;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #e74c3c;
+}
+
+.logo i {
+    margin-left: 10px;
+    font-size: 2rem;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-menu a:hover {
+    color: #e74c3c;
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-btn, .cart-icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+    position: relative;
+    padding: 10px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.search-btn:hover, .cart-icon:hover {
+    background: #f8f9fa;
+    transform: scale(1.1);
+}
+
+.cart-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: #333;
+    margin: 3px 0;
+    transition: 0.3s;
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    animation: fadeInUp 1s ease;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    animation: fadeInUp 1s ease 0.2s both;
+}
+
+.cta-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    animation: fadeInUp 1s ease 0.4s both;
+}
+
+.cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
+}
+
+.hero-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Products Section */
+.products {
+    padding: 100px 0;
+    background: #f8f9fa;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: #333;
+}
+
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: white;
+    border: 2px solid #e9ecef;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background: #e74c3c;
+    color: white;
+    border-color: #e74c3c;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.product-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    transition: all 0.4s;
+    cursor: pointer;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.product-image {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.1);
+}
+
+.product-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #e74c3c;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.product-info {
+    padding: 1.5rem;
+}
+
+.product-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #e74c3c;
+    margin-bottom: 0.5rem;
+}
+
+.product-rating {
+    color: #f39c12;
+    margin-bottom: 1rem;
+}
+
+.product-category {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Modal Styles */
+.modal, .cart-modal, .search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    max-width: 900px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalSlideIn 0.3s ease;
+}
+
+.close-modal, .close-cart, .close-search {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #999;
+    z-index: 10;
+}
+
+.close-modal:hover, .close-cart:hover, .close-search:hover {
+    color: #333;
+}
+
+.product-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    padding: 2rem;
+}
+
+.product-images {
+    position: relative;
+}
+
+.main-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+.thumbnails {
+    display: flex;
+    gap: 10px;
+}
+
+.thumbnails img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: border 0
